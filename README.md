@@ -23,7 +23,7 @@ Boom! You get a seamless, mind-bending visual illusion of being completely invis
 1. Clone or download this repository to your local machine.
 2. Open Terminal and navigate to your project directory:
    ```bash
-   cd "OpenCV Project"
+   cd "Invisibility-Cloak-Project"
     
 3. Execute the Python script:
    ```bash
@@ -32,7 +32,17 @@ Boom! You get a seamless, mind-bending visual illusion of being completely invis
 5. Step back into the frame with a solid red cloth, blanket, or jacket.
 6. Press `q` on your keyboard to stop the program and automatically save the video.
 ---
+## ⚙️ How it Works (Under the Hood)
 
+The project utilizes fundamental image processing and color segmentation techniques:
+
+* **Background Capture:** The script captures multiple frames at the start to store a steady image of the room without any object.
+* **Color Space Conversion:** It converts the live video frames from standard BGR to **HSV (Hue, Saturation, Value)** space, which allows for more stable and robust color detection under varying light conditions.
+* **Mask Generation:** It targets the Red color spectrum by defining lower and upper boundaries. A binary mask is created where the red areas are separated from the rest of the frame.
+* **Morphological Operations:** Functions like `cv2.morphologyEx` are applied to the mask to filter out minor background noise and smooth out the edges of the cloak.
+* **Image Blending:** Using bitwise operations, the live frame (excluding the red cloak) and the stored background frame (only where the red cloak is) are combined to generate the final visual illusion.
+* **Video Recording:** The final output frames are written in real-time to a file named `invisibility_cloak_output.mp4`.
+---
 ## 📸 Tech Stack
 
 * **Language:** Python 3
