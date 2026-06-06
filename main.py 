@@ -1,0 +1,102 @@
+import cv2
+import numpy as np
+import time
+
+def main():
+    # 1. Initialize camera
+    cap = cv2.VideoCapture(0)
+    
+    # Wait for 5 seconds to let the camera adjust and allow the user to step out
+    print("Initializing camera... Please step out of the frame.")
+    time.sleep(5)
+    
+    background = None
+    
+    # 2. Capture the static blank background frame
+    for i in range(30):
+        ret, frame = cap.read()
+        if ret:
+            background = frame
+            
+    if background is None:
+        print("Error: Could not capture background. Exiting...")
+        return
+
+    # Flip the background frame horizontally for mirror effect
+    background = cv2.flip(background, 1)
+    print("Background captured successfully! You can enter the frame now.")
+
+    # Get camera frame width and height
+    frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    
+    # Define the codec and create VideoWriter object to save the output video
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter('invisibility_cloak_output.mp4', fourcc, 20.0, (frame_width, frame_height))
+    print("Video recording started... Output will be saved as 'invisibility_cloak_output.mp4'")
+
+    # 3. Main processing loop for live video stream
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+            
+        # Flip the current frame horizontally
+        frame = cv2.flip(frame, 1)
+        
+        # Convert the frame color space from BGR to HSV
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        
+        # --- Define HSV ranges for red color detection ---
+        # Lower red range (0-10 degrees)
+        lower_red1 = np.array([0, 70, 40])
+        upper_red1 = np.array([10, 255, 255])
+        mask1 = cv2.inRange(hsv, lower_red1, upper_red1)
+        
+        # Upper red range (170-180 degrees)
+        lower_red2 = np.array([170, 70, 40])
+        upper_red2 = np.array([180, 255, 255])
+        mask2 = cv2.inRange(hsv, lower_red2, upper_red2)
+        
+        # Combine both red masks
+        mask = mask1 + mask2
+        
+        # Perform morphological operations to remove small noises from the mask
+        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
+        mask = cv2.morphologyEx(mask, cv2.MORPH_DILATE, np.ones((3, 3), np.uint8))
+        
+        # Create an inverted mask for non-red regions
+        mask_inverse = cv2.bitwise_not(mask)
+        
+        # 4. Segment and blend images
+        # res1: Keep everything except the red cloak from the current live frame
+        res1 = cv2.bitwise_and(frame, frame, mask=mask_inverse)
+        
+        # res2: Take the static background only where the red cloak is detected
+        res2 = cv2.bitwise_and(background, background, mask=mask)
+        
+        # Combine res1 and res2 to generate the final invisibility effect
+        final_output = cv2.addWeighted(res1, 1, res2, 1, 0)
+        
+        # Overlay project title text on the output screen
+        cv2.putText(final_output, "Project Evanesco - Invisibility Cloak", (10, 30), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        
+        # Write the processed frame into the video file
+        out.write(final_output)
+        
+        # Display the live invisibility cloak result
+        cv2.imshow("Invisibility Cloak", final_output)
+        
+        # Press 'q' on the keyboard to exit the loop
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    # 5. Release resources and close all windows
+    cap.release()
+    out.release()
+    cv2.destroyAllWindows()
+    print("Video saved successfully!")
+
+if __name__ == "__main__":
+    main()
