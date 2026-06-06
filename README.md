@@ -7,7 +7,7 @@ Have you ever wanted to sneak around Hogwarts without Filch catching you? Say le
 
 This project is a super fun, interactive Computer Vision application that brings Harry Potter's legendary **"Invisibility Cloak"** straight into the Muggle world! Built using **Python** and **OpenCV**, the system works like pure techno-magic: it captures your empty room first, then tracks a specific color (like a red blanket) in real-time, and instantly cuts-and-pastes the background over it. 
 
-Boom! You get a seamless, mind-bending visual illusion of being completely invisible on screen. Mischief managed! 🪄✨
+Evanesco! You get a seamless, mind-bending visual illusion of being completely invisible on screen. Mischief managed! 🪄✨
 ---
 
 ## ✨ Features
