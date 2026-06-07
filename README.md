@@ -52,3 +52,9 @@ The project utilizes fundamental image processing and color segmentation techniq
 ## 📜 Acknowledgments
 
 This project is inspired by open-source **Invisibility Cloak** projects available on GitHub. 
+
+## 📸 Project Demo
+
+<p align="center">
+  <img src="Evanesco.png" alt="Invisibility Cloak Demo" width="600">
+</p>
