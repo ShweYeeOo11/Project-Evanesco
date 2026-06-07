@@ -48,3 +48,7 @@ The project utilizes fundamental image processing and color segmentation techniq
 * **Language:** Python 3
 * **Libraries:** OpenCV (`cv2`), NumPy
 * **Color Space:** HSV (Hue, Saturation, Value)
+
+## 📜 Acknowledgments
+
+This project is inspired by open-source **Invisibility Cloak** projects available on GitHub. 
